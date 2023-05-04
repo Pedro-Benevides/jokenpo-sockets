@@ -7,3 +7,4 @@ Implementação de um sistema distruibuido, utilizando troca de mensagens atrav�
 * [Rafael R C Cruz](https://github.com/ookamyabyss)
 * [Uendel Lima](https://github.com/unleed-l)
 * [João Vitor Café](https://github.com/JoaoVitorCafe)
+* [Jeferson Almeida](https://github.com/ajefersan)
