@@ -1,11 +1,11 @@
 import java.io.*;
 import java.net.*;
 
-public class TCPClient implements Client, Jogador {
+public class TCPClient implements Client, Player {
     private DataInputStream in;
     private DataOutputStream out;
     private Socket socket;
-    public JogadaEnum jogada;
+    public MoveEnum move;
 
     public void ConnectServer() {
         // Criacao do socket do Cliente, acessando o endereco/porta do Servidor e
@@ -41,8 +41,8 @@ public class TCPClient implements Client, Jogador {
         return socket;
     }
 
-    public void Lance(JogadaEnum jogada) {
-        this.jogada = jogada;
+    public void Move(MoveEnum move) {
+        this.move = move;
     }
 
     public static void main(String[] args) {
