@@ -19,7 +19,6 @@ public class TCPConnection extends Thread {
             this.clientSocket = clientSocket;
             this.in = new DataInputStream(clientSocket.getInputStream());
             this.out = new DataOutputStream(clientSocket.getOutputStream());
-            this.start();
         } catch (IOException e) {
             System.out.println("Connection:" + e.getMessage());
         }
