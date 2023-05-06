@@ -1,25 +1,25 @@
 public class Match {
-    private TCPClient firstPlayer;
-    private TCPClient secondPlayer;
+    private TCPConnection firstPlayer;
+    private TCPConnection secondPlayer;
 
-    public Match(TCPClient firstPlayer, TCPClient secondPlayer) {
+    public Match(TCPConnection firstPlayer, TCPConnection secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
     }
 
-    public TCPClient getFirstPlayer() {
+    public TCPConnection getFirstPlayer() {
         return firstPlayer;
     }
 
-    public void setFirstPlayer(TCPClient firstPlayer) {
+    public void setFirstPlayer(TCPConnection firstPlayer) {
         this.firstPlayer = firstPlayer;
     }
 
-    public TCPClient getSecondPlayer() {
+    public TCPConnection getSecondPlayer() {
         return secondPlayer;
     }
 
-    public void setSecondPlayer(TCPClient secondPlayer) {
+    public void setSecondPlayer(TCPConnection secondPlayer) {
         this.secondPlayer = secondPlayer;
     }
 }
