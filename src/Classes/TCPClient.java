@@ -7,6 +7,10 @@ public class TCPClient implements Client, Player {
     private Socket socket;
     public MoveEnum move;
 
+    public TCPClient() {
+        this.ConnectServer();
+    }
+
     public void ConnectServer() {
         // Criacao do socket do Cliente, acessando o endereco/porta do Servidor e
         // criacao dos fluxos de I/O. (inicio)
