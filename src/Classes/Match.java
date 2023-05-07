@@ -1,7 +1,7 @@
 import java.io.EOFException;
 import java.io.IOException;
 
-public class Match {
+public class Match extends Thread {
     private TCPConnection firstPlayer;
     private TCPConnection secondPlayer;
     private TCPConnection winner;
@@ -52,47 +52,50 @@ public class Match {
 
     }
 
-    public void runMatch() {
+    @Override
+    public void run() {
+        boolean starMatch = true;
         boolean endMatch = false;
-
         try {
+            while (!endMatch) {
+                // envio de mensagem de inicio de partida
+                this.getFirstPlayer().getOut().writeBoolean(starMatch);
+                this.getSecondPlayer().getOut().writeBoolean(starMatch);
 
-            this.getFirstPlayer().start();
-            this.getSecondPlayer().start();
+                // Recebimento de jogadas
+                String jogada1 = this.getFirstPlayer().getIn().readUTF();
+                String jogada2 = this.getSecondPlayer().getIn().readUTF();
 
-            // Recebe jogadas
-            String jogada1 = this.getFirstPlayer().getIn().readUTF();
-            String jogada2 = this.getSecondPlayer().getIn().readUTF();
-
-            // Verifica resultado
-            if (jogada1.equals(jogada2)) {
-                this.getFirstPlayer().getOut().writeUTF("Empate! , joguem novamente!");
-                this.getSecondPlayer().getOut().writeUTF("Empate! , joguem novamente!");
-            } else {
-                // Manda jogadas pro cliente
-                this.getFirstPlayer().getOut().writeUTF("A jogada do adversário foi " + MoveEnum.valueOf(jogada2));
-                this.getSecondPlayer().getOut().writeUTF("A jogada do adversário foi " + MoveEnum.valueOf(jogada1));
-
-                this.calcWinner(jogada1, jogada2);
-
-                // informa o vencedor
-                if (this.winner.equals(this.getFirstPlayer())) {
-                    this.getFirstPlayer().getOut().writeUTF("Vencedor!");
-                    this.getSecondPlayer().getOut().writeUTF("Perdeu!");
-
+                // Verifica resultado
+                if (jogada1.equals(jogada2)) {
+                    this.getFirstPlayer().getOut().writeUTF("Empate! , joguem novamente!");
+                    this.getSecondPlayer().getOut().writeUTF("Empate! , joguem novamente!");
                 } else {
-                    this.getSecondPlayer().getOut().writeUTF("Vencedor!");
-                    this.getFirstPlayer().getOut().writeUTF("Perdeu!");
+                    // Manda jogadas pro cliente
+                    this.getFirstPlayer().getOut().writeUTF("A jogada do adversário foi " + MoveEnum.valueOf(jogada2));
+                    this.getSecondPlayer().getOut().writeUTF("A jogada do adversário foi " + MoveEnum.valueOf(jogada1));
+
+                    this.calcWinner(jogada1, jogada2);
+
+                    // informa o vencedor
+                    if (this.winner.equals(this.getFirstPlayer())) {
+                        this.getFirstPlayer().getOut().writeUTF("Vencedor!");
+                        this.getSecondPlayer().getOut().writeUTF("Perdeu!");
+
+                    } else {
+                        this.getSecondPlayer().getOut().writeUTF("Vencedor!");
+                        this.getFirstPlayer().getOut().writeUTF("Perdeu!");
+                    }
+                    endMatch = true;
+
                 }
 
-                // encerra conexoes
-                // this.getFirstPlayer().interrupt();
-                // this.getSecondPlayer().interrupt();
-
-                endMatch = true;
-                // Manda confirmação se o jogo acabou
-                firstPlayer.getOut().writeBoolean(endMatch);
-                secondPlayer.getOut().writeBoolean(endMatch);
+                if (endMatch) {
+                    // Manda confirmação se o jogo acabou
+                    firstPlayer.getOut().writeBoolean(endMatch);
+                    secondPlayer.getOut().writeBoolean(endMatch);
+                    break;
+                }
 
             }
             // Conversa entre a Thread-Servidor com o Cliente. (final)
