@@ -4,6 +4,7 @@ import java.io.IOException;
 public class Match {
     private TCPConnection firstPlayer;
     private TCPConnection secondPlayer;
+    private TCPConnection winner;
 
     public Match(TCPConnection firstPlayer, TCPConnection secondPlayer) {
         this.firstPlayer = firstPlayer;
@@ -26,56 +27,72 @@ public class Match {
         this.secondPlayer = secondPlayer;
     }
 
-    private int calcWinner(String jogada1, String jogada2) {
+    public TCPConnection getWinner() {
+        return winner;
+    }
+
+    public void setWinner(TCPConnection winner) {
+        this.winner = winner;
+    }
+
+    private void calcWinner(String jogada1, String jogada2) {
         String pedra = String.valueOf(MoveEnum.PEDRA);
         String tesoura = String.valueOf(MoveEnum.TESOURA);
         String papel = String.valueOf(MoveEnum.PAPEL);
 
-        if(jogada1 == pedra && jogada2 == tesoura) return 1;
-        if(jogada1 == tesoura && jogada2 == papel) return 1;
-        if(jogada1 == papel && jogada2 == pedra) return 1;
-        
-        return 2;
+        if (jogada1 == pedra && jogada2 == tesoura) {
+            this.setWinner(firstPlayer);
+        } else if (jogada1 == tesoura && jogada2 == papel) {
+            this.setWinner(firstPlayer);
+        } else if (jogada1 == papel && jogada2 == pedra) {
+            this.setWinner(firstPlayer);
+        } else {
+            this.setWinner(secondPlayer);
+        }
+
     }
 
-    public void runMatch(){
-        
-        boolean starMatch = true;
+    public void runMatch() {
+        boolean endMatch = false;
 
         try {
 
-            firstPlayer.getOut().writeBoolean(starMatch);
-            secondPlayer.getOut().writeBoolean(starMatch);
-            
-            boolean endGame = false;
-            while (!endGame) {
-                
-                // Recebe jogadas
-                String jogada1 = firstPlayer.getIn().readUTF();
-                String jogada2 = secondPlayer.getIn().readUTF();
+            this.getFirstPlayer().start();
+            this.getSecondPlayer().start();
 
+            // Recebe jogadas
+            String jogada1 = this.getFirstPlayer().getIn().readUTF();
+            String jogada2 = this.getSecondPlayer().getIn().readUTF();
+
+            // Verifica resultado
+            if (jogada1.equals(jogada2)) {
+                this.getFirstPlayer().getOut().writeUTF("Empate! , joguem novamente!");
+                this.getSecondPlayer().getOut().writeUTF("Empate! , joguem novamente!");
+            } else {
                 // Manda jogadas pro cliente
-                firstPlayer.getOut().writeUTF("A jogada do adversário foi " + jogada2);
-                secondPlayer.getOut().writeUTF("A jogada do adversário foi " + jogada1);
+                this.getFirstPlayer().getOut().writeUTF("A jogada do adversário foi " + MoveEnum.valueOf(jogada2));
+                this.getSecondPlayer().getOut().writeUTF("A jogada do adversário foi " + MoveEnum.valueOf(jogada1));
 
-                // Verifica resultado
-                if(jogada1.equals(jogada2)){
-                    firstPlayer.getOut().writeUTF("Empate! , joguem novamente!");
-                    secondPlayer.getOut().writeUTF("Empate! , joguem novamente!");
+                this.calcWinner(jogada1, jogada2);
+
+                // informa o vencedor
+                if (this.winner.equals(this.getFirstPlayer())) {
+                    this.getFirstPlayer().getOut().writeUTF("Vencedor!");
+                    this.getSecondPlayer().getOut().writeUTF("Perdeu!");
+
+                } else {
+                    this.getSecondPlayer().getOut().writeUTF("Vencedor!");
+                    this.getFirstPlayer().getOut().writeUTF("Perdeu!");
                 }
 
-                else {
-                    int winner = calcWinner(jogada1, jogada2);
+                // encerra conexoes
+                // this.getFirstPlayer().interrupt();
+                // this.getSecondPlayer().interrupt();
 
-                    firstPlayer.getOut().writeUTF("O vencedor foi o jogador" + winner);
-                    secondPlayer.getOut().writeUTF("O vencedor foi o jogador" + winner);
-
-                    endGame = true;
-                }
-
+                endMatch = true;
                 // Manda confirmação se o jogo acabou
-                firstPlayer.getOut().writeBoolean(endGame);
-                secondPlayer.getOut().writeBoolean(endGame);
+                firstPlayer.getOut().writeBoolean(endMatch);
+                secondPlayer.getOut().writeBoolean(endMatch);
 
             }
             // Conversa entre a Thread-Servidor com o Cliente. (final)
@@ -98,6 +115,5 @@ public class Match {
             }
         }
         // Tratamento de Excecoes. (final)
-    }        
+    }
 }
-
