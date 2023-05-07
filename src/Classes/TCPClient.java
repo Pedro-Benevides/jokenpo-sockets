@@ -59,7 +59,7 @@ public class TCPClient implements Client, Player {
 
         try {
 
-            boolean start = client.in.readBoolean();
+            boolean start = client.getIn().readBoolean();
             System.out.println("Partida iniciada!");
 
             while (start) {
@@ -76,18 +76,18 @@ public class TCPClient implements Client, Player {
 
                 client.Move(MoveEnum.getMove(move));
 
-                client.out.writeUTF(String.valueOf(client.getMove()));
+                client.getOut().writeUTF(String.valueOf(client.getMove()));
 
                 // Mostra a jogada do oponente
-                String opponentMove = client.in.readUTF();
+                String opponentMove = client.getIn().readUTF();
                 System.out.println(opponentMove);
 
                 // Mostra o resultado
-                String result = client.in.readUTF();
+                String result = client.getIn().readUTF();
                 System.out.println(result);
 
                 // Fim de jogo?
-                boolean endMatch = client.in.readBoolean();
+                boolean endMatch = client.getIn().readBoolean();
                 if (endMatch)
                     break;
 
