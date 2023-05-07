@@ -1,11 +1,12 @@
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class TCPClient implements Client, Player {
     private DataInputStream in;
     private DataOutputStream out;
     private Socket socket;
-    public MoveEnum move;
+    private MoveEnum move;
 
     public TCPClient() {
         this.ConnectServer();
@@ -26,9 +27,9 @@ public class TCPClient implements Client, Player {
         } catch (UnknownHostException e) {
             System.out.println("Sock:" + e.getMessage());
         } catch (EOFException e) {
-            System.out.println("EOF:" + e.getMessage());
+            System.out.println("EOF while connecting server:" + e.getMessage());
         } catch (IOException e) {
-            System.out.println("IO:" + e.getMessage());
+            System.out.println("IO while connecting server:" + e.getMessage());
         }
         // Tratamento de Excecoes. (final)
     }
@@ -45,6 +46,10 @@ public class TCPClient implements Client, Player {
         return socket;
     }
 
+    public MoveEnum getMove() {
+        return move;
+    }
+
     public void Move(MoveEnum move) {
         this.move = move;
     }
@@ -53,22 +58,50 @@ public class TCPClient implements Client, Player {
         TCPClient client = new TCPClient();
 
         try {
-            // Conversa entre o Cliente e o Servidor. (inicio)
-            int i = 0;
-            for (int j = 0; j < 10; ++j) {
-                client.getOut().writeUTF("Pedido de Servico " + ++i);
-                String data = client.getIn().readUTF();
-                System.out.println("Recebido a " + data);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    System.out.println("Thread Interrupted:" + e.getMessage());
+
+            boolean start = client.getIn().readBoolean();
+            System.out.println("Partida iniciada!");
+
+            while (start) {
+
+                // Conversa entre o Cliente e o Servidor. (inicio)
+
+                Scanner input = new Scanner(System.in);
+                System.out.println("PEDRA   [1] : ");
+                System.out.println("PAPEL   [2] : ");
+                System.out.println("TESOURA [3] : ");
+                System.out.println("Escolha a sua jogada? : ");
+                int move = input.nextInt();
+
+                client.Move(MoveEnum.getMove(move));
+
+                client.getOut().writeUTF(String.valueOf(client.getMove()));
+
+                // Mostra a jogada do oponente
+                String opponentMove = client.getIn().readUTF();
+                System.out.println(opponentMove);
+
+                // Mostra o resultado
+                String result = client.getIn().readUTF();
+                System.out.println(result);
+
+                // Fim de jogo?
+                boolean endMatch = client.getIn().readBoolean();
+
+                if (endMatch) {
+                    break;
                 }
+
+            }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                System.out.println("Thread Interrupted:" + e.getMessage());
             }
             // Conversa entre o Cliente e o Servidor. (final)
 
         } catch (IOException e) {
-            System.out.println("IO:" + e.getMessage());
+            System.out.println("IO Client:" + e.getMessage());
         } finally {
             if (client.getSocket() != null)
                 try {
