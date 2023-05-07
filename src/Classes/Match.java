@@ -39,7 +39,14 @@ public class Match {
     }
 
     public void runMatch(){
+        
+        boolean starMatch = true;
+
         try {
+
+            firstPlayer.getOut().writeBoolean(starMatch);
+            secondPlayer.getOut().writeBoolean(starMatch);
+            
             boolean endGame = false;
             while (!endGame) {
                 

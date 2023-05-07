@@ -54,6 +54,11 @@ public class TCPClient implements Client, Player {
         TCPClient client = new TCPClient();
 
         try {
+
+            boolean start = client.in.readBoolean(); 
+
+            if(start){
+
             while(true){
 
             // Conversa entre o Cliente e o Servidor. (inicio)
@@ -87,6 +92,7 @@ public class TCPClient implements Client, Player {
             if(endGame) break;
 
         }
+    }
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
