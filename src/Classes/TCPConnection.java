@@ -42,10 +42,8 @@ public class TCPConnection extends Thread {
     @Override
     public void run() {
         try {
-            // while (true) {
             boolean starMatch = true;
             this.getOut().writeBoolean(starMatch);
-            // }
             // Conversa entre a Thread-Servidor com o Cliente. (final)
 
             // Tratamento de Excecoes. (inicio)
