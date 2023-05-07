@@ -81,8 +81,8 @@ public class TCPServer implements Server, Playable {
 
         Match match = new Match(firstPlayerConnection, secondPlayerConnection);
         this.matches.add(match);
-        
-        match.runMatch();
+
+        match.start();
     }
 
     @Override
