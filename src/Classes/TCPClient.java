@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.*;  
 
 public class TCPClient implements Client, Player {
     private DataInputStream in;
@@ -53,19 +54,46 @@ public class TCPClient implements Client, Player {
         TCPClient client = new TCPClient();
 
         try {
+            while(true){
+
             // Conversa entre o Cliente e o Servidor. (inicio)
-            int i = 0;
-            for (int j = 0; j < 10; ++j) {
-                client.getOut().writeUTF("Pedido de Servico " + ++i);
-                String data = client.getIn().readUTF();
-                System.out.println("Recebido a " + data);
+
+            Scanner input = new Scanner(System.in);
+            System.out.println("PEDRA   [1] : ");
+            System.out.println("PAPEL   [2] : ");
+            System.out.println("TESOURA [3] : ");
+            System.out.println("Escolha a sua jogada? : ");
+            int move = input.nextInt(); 
+
+            if(move == 1)
+                client.move = MoveEnum.PEDRA;
+            if(move == 2)
+                client.move = MoveEnum.PAPEL;
+            if(move == 3)
+                client.move = MoveEnum.TESOURA;
+
+            client.out.writeUTF(String.valueOf(client.move));
+                         
+             // Mostra a jogada do oponente
+             String opponentMove = client.in.readUTF();                
+             System.out.println(opponentMove);
+
+             // Mostra o resultado
+            String result = client.in.readUTF();                
+            System.out.println(result);
+
+            // Fim de jogo? 
+            boolean endGame = client.in.readBoolean();                
+            if(endGame) break;
+
+        }
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     System.out.println("Thread Interrupted:" + e.getMessage());
                 }
-            }
             // Conversa entre o Cliente e o Servidor. (final)
+        
 
         } catch (IOException e) {
             System.out.println("IO:" + e.getMessage());

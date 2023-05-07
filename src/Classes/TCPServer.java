@@ -79,7 +79,10 @@ public class TCPServer implements Server, Playable {
         this.connections.remove(firstPlayerConnection);
         this.connections.remove(secondPlayerConnection);
 
-        this.matches.add(new Match(firstPlayerConnection, secondPlayerConnection));
+        Match match = new Match(firstPlayerConnection, secondPlayerConnection);
+        this.matches.add(match);
+        
+        match.calcWinner();
     }
 
     @Override
