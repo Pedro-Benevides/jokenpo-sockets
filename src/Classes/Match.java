@@ -66,9 +66,11 @@ public class Match {
 
                 else {
                     int winner = calcWinner(jogada1, jogada2);
+                    String player1Return = winner == 1 ? "Você ganhou!" : "Você perdeu =/";
+                    String player2Return = winner == 2 ? "Você ganhou!" : "Você perdeu =/";
 
-                    firstPlayer.getOut().writeUTF("O vencedor foi o jogador" + winner);
-                    secondPlayer.getOut().writeUTF("O vencedor foi o jogador" + winner);
+                    firstPlayer.getOut().writeUTF(player1Return);
+                    secondPlayer.getOut().writeUTF(player2Return);
 
                     endGame = true;
                 }

@@ -68,7 +68,7 @@ public class TCPClient implements Client, Player {
             System.out.println("PAPEL   [2] : ");
             System.out.println("TESOURA [3] : ");
             System.out.println("Escolha a sua jogada? : ");
-            int move = input.nextInt(); 
+            int move = input.nextInt();
 
             if(move == 1)
                 client.move = MoveEnum.PEDRA;
