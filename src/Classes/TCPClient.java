@@ -72,6 +72,7 @@ public class TCPClient implements Client, Player {
                 System.out.println("TESOURA [3] : ");
                 System.out.println("Escolha a sua jogada? : ");
                 int move = input.nextInt();
+                input.close();
 
                 client.Move(MoveEnum.getMove(move));
 
