@@ -39,13 +39,13 @@ public class TCPConnection extends Thread {
     }
 
     // Conversa entre a Thread-Servidor com o Cliente. (inicio)
+    @Override
     public void run() {
         try {
-            while (true) {
-                String data = this.getIn().readUTF();
-                System.out.println("Recebido o " + data);
-                this.getOut().writeUTF("Resposta ao " + data);
-            }
+            // while (true) {
+            boolean starMatch = true;
+            this.getOut().writeBoolean(starMatch);
+            // }
             // Conversa entre a Thread-Servidor com o Cliente. (final)
 
             // Tratamento de Excecoes. (inicio)
@@ -62,5 +62,4 @@ public class TCPConnection extends Thread {
         }
         // Tratamento de Excecoes. (final)
     }
-
 }
