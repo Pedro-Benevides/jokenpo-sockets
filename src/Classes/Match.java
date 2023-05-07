@@ -86,17 +86,12 @@ public class Match extends Thread {
                         this.getSecondPlayer().getOut().writeUTF("Vencedor!");
                         this.getFirstPlayer().getOut().writeUTF("Perdeu!");
                     }
-                    endMatch = true;
-
-                }
-
-                if (endMatch) {
                     // Manda confirmação se o jogo acabou
+                    endMatch = true;
                     firstPlayer.getOut().writeBoolean(endMatch);
                     secondPlayer.getOut().writeBoolean(endMatch);
                     break;
                 }
-
             }
             // Conversa entre a Thread-Servidor com o Cliente. (final)
 
