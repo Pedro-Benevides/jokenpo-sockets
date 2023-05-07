@@ -88,8 +88,10 @@ public class TCPClient implements Client, Player {
 
                 // Fim de jogo?
                 boolean endMatch = client.getIn().readBoolean();
-                if (endMatch)
+
+                if (endMatch) {
                     break;
+                }
 
             }
             try {
