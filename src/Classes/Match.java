@@ -1,8 +1,5 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.Socket;
 
 public class Match {
     private TCPConnection firstPlayer;
@@ -29,7 +26,19 @@ public class Match {
         this.secondPlayer = secondPlayer;
     }
 
-    public void calcWinner(){
+    private int calcWinner(String jogada1, String jogada2) {
+        String pedra = String.valueOf(MoveEnum.PEDRA);
+        String tesoura = String.valueOf(MoveEnum.TESOURA);
+        String papel = String.valueOf(MoveEnum.PAPEL);
+
+        if(jogada1 == pedra && jogada2 == tesoura) return 1;
+        if(jogada1 == tesoura && jogada2 == papel) return 1;
+        if(jogada1 == papel && jogada2 == pedra) return 1;
+        
+        return 2;
+    }
+
+    public void runMatch(){
         try {
             boolean endGame = false;
             while (!endGame) {
@@ -49,8 +58,11 @@ public class Match {
                 }
 
                 else {
-                    firstPlayer.getOut().writeUTF("O vencedor foi");
-                    secondPlayer.getOut().writeUTF("O vencedor foi");
+                    int winner = calcWinner(jogada1, jogada2);
+
+                    firstPlayer.getOut().writeUTF("O vencedor foi o jogador" + winner);
+                    secondPlayer.getOut().writeUTF("O vencedor foi o jogador" + winner);
+
                     endGame = true;
                 }
 
