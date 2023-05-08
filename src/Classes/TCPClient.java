@@ -54,6 +54,24 @@ public class TCPClient implements Client, Player {
         this.move = move;
     }
 
+    private static int checkInput() {
+        Scanner input = new Scanner(System.in);
+
+        try {
+            int move = input.nextInt();
+            
+            if(move > 0 && move < 4) {
+                return move;
+            } else {
+                System.out.println("Opção inválida! Digite uma das opções informadas.");
+                return checkInput();
+            }
+        } catch (Exception e){
+            System.out.println("Opção inválida! Digite uma das opções informadas.");
+            return checkInput();
+        }
+    }
+
     public static void main(String[] args) {
         TCPClient client = new TCPClient();
 
@@ -66,12 +84,11 @@ public class TCPClient implements Client, Player {
 
                 // Conversa entre o Cliente e o Servidor. (inicio)
 
-                Scanner input = new Scanner(System.in);
                 System.out.println("PEDRA   [1] : ");
                 System.out.println("PAPEL   [2] : ");
                 System.out.println("TESOURA [3] : ");
                 System.out.println("Escolha a sua jogada? : ");
-                int move = input.nextInt();
+                int move = checkInput();
 
                 client.Move(MoveEnum.getMove(move));
 
@@ -93,6 +110,7 @@ public class TCPClient implements Client, Player {
                 }
 
             }
+
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
