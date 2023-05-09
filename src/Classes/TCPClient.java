@@ -60,12 +60,9 @@ public class TCPClient implements Client, Player {
         try {
             int move = input.nextInt();
             
-            if(move > 0 && move < 4) {
-                return move;
-            } else {
-                System.out.println("Opção inválida! Digite uma das opções informadas.");
-                return checkInput();
-            }
+            if(move > 0 && move < 4) return move;
+            else throw new Exception();
+            
         } catch (Exception e){
             System.out.println("Opção inválida! Digite uma das opções informadas.");
             return checkInput();
